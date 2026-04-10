@@ -121,17 +121,20 @@ export default function NewBookingPage() {
 
         {/* Purpose */}
         <div>
-          <label className="label">Purpose *</label>
+          <label className="label font-semibold text-surface-900 dark:text-white">Purpose *</label>
           <textarea
             value={form.purpose}
             onChange={e => setForm(f => ({ ...f, purpose: e.target.value }))}
             placeholder="Describe the purpose of your booking..."
-            className="input resize-none"
-            rows={3}
+            className="input resize-none border-surface-300 dark:border-surface-600"
+            rows={4}
             maxLength={500}
             required
           />
-          <div className="text-right text-xs text-surface-400 mt-1">{form.purpose.length}/500</div>
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-xs text-surface-400">Max 500 characters</span>
+            <span className="text-xs text-surface-500 font-medium">{form.purpose.length}/500</span>
+          </div>
         </div>
 
         {/* Expected attendees */}
