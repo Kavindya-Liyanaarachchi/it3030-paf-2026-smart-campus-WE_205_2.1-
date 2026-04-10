@@ -150,15 +150,15 @@ export default function NewBookingPage() {
           />
         </div>
 
-        <div className="flex gap-3 pt-2">
-          <button type="submit" disabled={mutation.isPending} className="btn-primary flex-1">
+        <div className="flex gap-3 pt-4">
+          <button type="submit" disabled={mutation.isPending} className="btn-primary flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-semibold">
             {mutation.isPending
               ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              : <Calendar className="w-4 h-4" />
+              : <Calendar className="w-5 h-5" />
             }
-            Submit Booking Request
+            {mutation.isPending ? 'Submitting...' : 'Submit Booking Request'}
           </button>
-          <button type="button" onClick={() => navigate(-1)} className="btn-secondary">Cancel</button>
+          <button type="button" onClick={() => navigate(-1)} className="btn-secondary py-3 px-6 rounded-lg font-semibold">Cancel</button>
         </div>
       </form>
     </div>
