@@ -1,0 +1,3 @@
+backend/target/
+config.bat
+node_modules

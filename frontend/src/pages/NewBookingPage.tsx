@@ -1,0 +1,153 @@
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { bookingsApi } from '../api/bookings';
+import { ArrowLeft, Calendar, Clock } from 'lucide-react';
+import { formatTime } from '../utils';
+import toast from 'react-hot-toast';
+
+export default function NewBookingPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
+
+  const [form, setForm] = useState({
+    resourceId: searchParams.get('resourceId') ?? '',   // String, not Number
+    bookingDate: new Date().toISOString().split('T')[0],
+    startTime: '09:00',
+    endTime: '10:00',
+    purpose: '',
+    expectedAttendees: '',
+  });
+
+  const mutation = useMutation({
+    mutationFn: () => bookingsApi.create({
+      resourceId: form.resourceId as any,
+      bookingDate: form.bookingDate,
+      startTime: form.startTime,
+      endTime: form.endTime,
+      purpose: form.purpose,
+      expectedAttendees: form.expectedAttendees ? Number(form.expectedAttendees) : undefined,
+    }),
+    onSuccess: () => {
+      toast.success('Booking request submitted!');
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      navigate('/bookings');
+    },
+    onError: (e: any) => toast.error(e.response?.data?.message ?? 'Booking failed'),
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.resourceId) return toast.error('Please select a resource');
+    if (!form.purpose.trim()) return toast.error('Please enter a purpose');
+    if (form.startTime >= form.endTime) return toast.error('Start time must be before end time');
+    mutation.mutate();
+  };
+
+  return (
+    <div className="max-w-2xl space-y-6">
+      <button onClick={() => navigate(-1)} className="btn-ghost text-sm">
+        <ArrowLeft className="w-4 h-4" /> Back
+      </button>
+
+      <div>
+        <h1 className="font-display text-2xl font-700 text-surface-900 dark:text-white">New Booking</h1>
+        <p className="text-surface-500 dark:text-surface-400 text-sm mt-1">
+          Request a resource booking — admins will review and approve.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="card p-6 space-y-5">
+        {/* Resource ID input */}
+        <div>
+          <label className="label">Resource ID *</label>
+          <input
+            type="text"
+            value={form.resourceId}
+            onChange={e => setForm(f => ({ ...f, resourceId: e.target.value }))}
+            className="input"
+            placeholder="Enter resource ID"
+            required
+          />
+        </div>
+
+        {/* Date */}
+        <div>
+          <label className="label">Date *</label>
+          <input
+            type="date"
+            value={form.bookingDate}
+            min={new Date().toISOString().split('T')[0]}
+            onChange={e => setForm(f => ({ ...f, bookingDate: e.target.value }))}
+            className="input"
+            required
+          />
+        </div>
+
+        {/* Time range */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="label">Start Time *</label>
+            <input
+              type="time"
+              value={form.startTime}
+              onChange={e => setForm(f => ({ ...f, startTime: e.target.value }))}
+              className="input"
+              required
+            />
+          </div>
+          <div>
+            <label className="label">End Time *</label>
+            <input
+              type="time"
+              value={form.endTime}
+              onChange={e => setForm(f => ({ ...f, endTime: e.target.value }))}
+              className="input"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Purpose */}
+        <div>
+          <label className="label">Purpose *</label>
+          <textarea
+            value={form.purpose}
+            onChange={e => setForm(f => ({ ...f, purpose: e.target.value }))}
+            placeholder="Describe the purpose of your booking..."
+            className="input resize-none"
+            rows={3}
+            maxLength={500}
+            required
+          />
+          <div className="text-right text-xs text-surface-400 mt-1">{form.purpose.length}/500</div>
+        </div>
+
+        {/* Expected attendees */}
+        <div>
+          <label className="label">Expected Attendees</label>
+          <input
+            type="number"
+            value={form.expectedAttendees}
+            onChange={e => setForm(f => ({ ...f, expectedAttendees: e.target.value }))}
+            placeholder="Number of attendees"
+            min={1}
+            className="input"
+          />
+        </div>
+
+        <div className="flex gap-3 pt-2">
+          <button type="submit" disabled={mutation.isPending} className="btn-primary flex-1">
+            {mutation.isPending
+              ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              : <Calendar className="w-4 h-4" />
+            }
+            Submit Booking Request
+          </button>
+          <button type="button" onClick={() => navigate(-1)} className="btn-secondary">Cancel</button>
+        </div>
+      </form>
+    </div>
+  );
+}
