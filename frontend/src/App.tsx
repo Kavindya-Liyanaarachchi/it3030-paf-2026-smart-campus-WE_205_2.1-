@@ -5,8 +5,17 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AppLayout from './components/layout/AppLayout';
 import LoginPage from './pages/LoginPage';
 import OAuth2RedirectPage from './pages/OAuth2RedirectPage';
+import DashboardPage from './pages/DashboardPage';
+import ResourcesPage from './pages/ResourcesPage';
+import ResourceDetailPage from './pages/ResourceDetailPage';
 import BookingsPage from './pages/BookingsPage';
 import NewBookingPage from './pages/NewBookingPage';
+import TicketsPage from './pages/TicketsPage';
+import TicketDetailPage from './pages/TicketDetailPage';
+import NewTicketPage from './pages/NewTicketPage';
+import NotificationsPage from './pages/NotificationsPage';
+import AdminPage from './pages/AdminPage';
+import ProfilePage from './pages/ProfilePage';
 
 // Create queryClient OUTSIDE App so it's stable across renders
 const queryClient = new QueryClient({
@@ -28,7 +37,7 @@ function ProtectedRoute({ children, roles }: { children: React.ReactNode; roles?
     </div>
   );
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (roles && !hasRole(...roles)) return <Navigate to="/bookings" replace />;
+  if (roles && !hasRole(...roles)) return <Navigate to="/dashboard" replace />;
   return <>{children}</>;
 }
 
@@ -41,9 +50,22 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/oauth2/redirect" element={<OAuth2RedirectPage />} />
             <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
-              <Route index element={<Navigate to="/bookings" replace />} />
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="resources" element={<ResourcesPage />} />
+              <Route path="resources/:id" element={<ResourceDetailPage />} />
               <Route path="bookings" element={<BookingsPage />} />
               <Route path="bookings/new" element={<NewBookingPage />} />
+              <Route path="tickets" element={<TicketsPage />} />
+              <Route path="tickets/new" element={<NewTicketPage />} />
+              <Route path="tickets/:id" element={<TicketDetailPage />} />
+              <Route path="notifications" element={<NotificationsPage />} />
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="admin" element={
+                <ProtectedRoute roles={['ADMIN', 'MANAGER']}>
+                  <AdminPage />
+                </ProtectedRoute>
+              } />
             </Route>
           </Routes>
         </BrowserRouter>
