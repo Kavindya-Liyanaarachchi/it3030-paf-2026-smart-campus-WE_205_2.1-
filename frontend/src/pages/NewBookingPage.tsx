@@ -75,38 +75,47 @@ export default function NewBookingPage() {
 
         {/* Date */}
         <div>
-          <label className="label">Date *</label>
-          <input
-            type="date"
-            value={form.bookingDate}
-            min={new Date().toISOString().split('T')[0]}
-            onChange={e => setForm(f => ({ ...f, bookingDate: e.target.value }))}
-            className="input"
-            required
-          />
+          <label className="label font-semibold text-surface-900 dark:text-white">Date *</label>
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-surface-400" />
+            <input
+              type="date"
+              value={form.bookingDate}
+              min={new Date().toISOString().split('T')[0]}
+              onChange={e => setForm(f => ({ ...f, bookingDate: e.target.value }))}
+              className="input mt-1 border-surface-300 dark:border-surface-600"
+              required
+            />
+          </div>
         </div>
 
         {/* Time range */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="label">Start Time *</label>
-            <input
-              type="time"
-              value={form.startTime}
-              onChange={e => setForm(f => ({ ...f, startTime: e.target.value }))}
-              className="input"
-              required
-            />
+            <label className="label font-semibold text-surface-900 dark:text-white">Start Time *</label>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-surface-400" />
+              <input
+                type="time"
+                value={form.startTime}
+                onChange={e => setForm(f => ({ ...f, startTime: e.target.value }))}
+                className="input mt-1 border-surface-300 dark:border-surface-600"
+                required
+              />
+            </div>
           </div>
           <div>
-            <label className="label">End Time *</label>
-            <input
-              type="time"
-              value={form.endTime}
-              onChange={e => setForm(f => ({ ...f, endTime: e.target.value }))}
-              className="input"
-              required
-            />
+            <label className="label font-semibold text-surface-900 dark:text-white">End Time *</label>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-surface-400" />
+              <input
+                type="time"
+                value={form.endTime}
+                onChange={e => setForm(f => ({ ...f, endTime: e.target.value }))}
+                className="input mt-1 border-surface-300 dark:border-surface-600"
+                required
+              />
+            </div>
           </div>
         </div>
 
