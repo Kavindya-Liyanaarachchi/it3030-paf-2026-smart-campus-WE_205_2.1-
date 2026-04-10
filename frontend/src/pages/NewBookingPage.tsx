@@ -47,13 +47,13 @@ export default function NewBookingPage() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <button onClick={() => navigate(-1)} className="btn-ghost text-sm">
+      <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-medium text-sm transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back
       </button>
 
-      <div>
-        <h1 className="font-display text-2xl font-700 text-surface-900 dark:text-white">New Booking</h1>
-        <p className="text-surface-500 dark:text-surface-400 text-sm mt-1">
+      <div className="space-y-2">
+        <h1 className="font-display text-3xl font-700 text-surface-900 dark:text-white">New Booking</h1>
+        <p className="text-surface-500 dark:text-surface-400 text-sm">
           Request a resource booking — admins will review and approve.
         </p>
       </div>
