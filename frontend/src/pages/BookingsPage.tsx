@@ -201,7 +201,7 @@ export default function BookingsPage() {
                       className="btn-ghost text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
                       disabled={cancelMutation.isPending}
                     >
-                      Cancel
+                      Cancel jj
                     </button>
                   )}
                 </div>

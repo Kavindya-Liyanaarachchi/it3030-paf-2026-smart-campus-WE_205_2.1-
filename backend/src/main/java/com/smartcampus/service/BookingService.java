@@ -5,8 +5,11 @@ import com.smartcampus.dto.request.BookingReviewRequest;
 import com.smartcampus.dto.response.BookingResponse;
 import com.smartcampus.dto.response.UserResponse;
 import com.smartcampus.entity.Booking;
+import com.smartcampus.entity.Resource;
 import com.smartcampus.entity.User;
 import com.smartcampus.enums.BookingStatus;
+import com.smartcampus.enums.NotificationType;
+import com.smartcampus.enums.ResourceStatus;
 import com.smartcampus.exception.*;
 import com.smartcampus.repository.BookingRepository;
 import com.smartcampus.repository.UserRepository;
@@ -24,16 +27,22 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
+    private final ResourceService resourceService;
+    private final NotificationService notificationService;
 
     public BookingResponse createBooking(String userId, BookingRequest request) {
         User user = findUser(userId);
+        Resource resource = resourceService.findById(request.getResourceId());
 
+        if (resource.getStatus() != ResourceStatus.ACTIVE) {
+            throw new BadRequestException("Resource is not available for booking");
+        }
         if (!request.getStartTime().isBefore(request.getEndTime())) {
             throw new BadRequestException("Start time must be before end time");
         }
 
         List<Booking> conflicts = bookingRepository.findConflictingBookings(
-            request.getResourceId(), request.getBookingDate(),
+            resource.getId(), request.getBookingDate(),
             request.getStartTime(), request.getEndTime());
 
         if (!conflicts.isEmpty()) {
@@ -41,7 +50,7 @@ public class BookingService {
         }
 
         Booking booking = Booking.builder()
-            .user(user).resourceId(request.getResourceId())
+            .user(user).resource(resource)
             .bookingDate(request.getBookingDate())
             .startTime(request.getStartTime())
             .endTime(request.getEndTime())
@@ -66,6 +75,17 @@ public class BookingService {
         booking.setReviewedBy(admin);
         booking = bookingRepository.save(booking);
 
+        NotificationType type = request.isApproved()
+            ? NotificationType.BOOKING_APPROVED : NotificationType.BOOKING_REJECTED;
+        String msg = String.format("Your booking for '%s' on %s has been %s.%s",
+            booking.getResource().getName(), booking.getBookingDate(),
+            request.isApproved() ? "approved" : "rejected",
+            request.getAdminNote() != null ? " Note: " + request.getAdminNote() : "");
+
+        notificationService.sendNotification(booking.getUser().getId(), type,
+            request.isApproved() ? "Booking Approved" : "Booking Rejected",
+            msg, booking.getId(), "BOOKING");
+
         return toResponse(booking);
     }
 
@@ -82,6 +102,12 @@ public class BookingService {
         booking.setStatus(BookingStatus.CANCELLED);
         booking = bookingRepository.save(booking);
 
+        if (!booking.getUser().getId().equals(userId)) {
+            notificationService.sendNotification(booking.getUser().getId(),
+                NotificationType.BOOKING_CANCELLED, "Booking Cancelled",
+                "Your booking for '" + booking.getResource().getName() + "' was cancelled by admin.",
+                booking.getId(), "BOOKING");
+        }
         return toResponse(booking);
     }
 
@@ -95,7 +121,7 @@ public class BookingService {
         List<Booking> all = bookingRepository.findByOrderByCreatedAtDesc();
         List<BookingResponse> filtered = all.stream()
             .filter(b -> status == null || b.getStatus() == status)
-            .filter(b -> resourceId == null || b.getResourceId().equals(resourceId))
+            .filter(b -> resourceId == null || b.getResource().getId().equals(resourceId))
             .filter(b -> date == null || b.getBookingDate().equals(date))
             .map(this::toResponse)
             .collect(Collectors.toList());
@@ -127,7 +153,6 @@ public class BookingService {
     public BookingResponse toResponse(Booking b) {
         BookingResponse r = new BookingResponse();
         r.setId(b.getId());
-        r.setResourceId(b.getResourceId());
         r.setBookingDate(b.getBookingDate());
         r.setStartTime(b.getStartTime());
         r.setEndTime(b.getEndTime());
@@ -137,6 +162,7 @@ public class BookingService {
         r.setAdminNote(b.getAdminNote());
         r.setCreatedAt(b.getCreatedAt());
         r.setUpdatedAt(b.getUpdatedAt());
+        r.setResource(resourceService.toResponse(b.getResource()));
         r.setUser(userToResponse(b.getUser()));
         if (b.getReviewedBy() != null) r.setReviewedBy(userToResponse(b.getReviewedBy()));
         return r;

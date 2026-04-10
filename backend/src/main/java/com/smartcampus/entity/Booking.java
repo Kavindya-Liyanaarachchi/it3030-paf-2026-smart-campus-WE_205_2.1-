@@ -16,7 +16,8 @@ public class Booking extends BaseEntity {
     @DBRef
     private User user;
 
-    private String resourceId;
+    @DBRef
+    private Resource resource;
 
     @Indexed
     private LocalDate bookingDate;
