@@ -2,24 +2,61 @@ server:
   port: 8080
 
 spring:
-  datasource:
-    url: jdbc:h2:file:./data/smart-campus;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  h2:
-    console:
+  application:
+    name: smart-campus-api
+
+  # MongoDB Configuration
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/smartcampus}
+      database: smartcampus
+
+  servlet:
+    multipart:
       enabled: true
-      path: /h2-console
+      max-file-size: 10MB
+      max-request-size: 30MB
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:SmartCampus2026SecretKeyForJWTTokenGenerationMustBeAtLeast256BitsLong}
+    expiration: 86400000
+    refresh-expiration: 604800000
+
+  frontend:
+    url: ${FRONTEND_URL:http://localhost:5173}
+
+  upload:
+    dir: ${UPLOAD_DIR:uploads}
+    max-images-per-ticket: 3
 
 logging:
   level:
-    org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    com.smartcampus: DEBUG
+    org.springframework.security: INFO
+    org.springframework.data.mongodb: INFO
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
