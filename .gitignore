@@ -1,0 +1,66 @@
+
+# Environment
+.env
+.env.*
+.vscode/.env
+
+# Maven/Java Build
+target/
+*.class
+*.jar
+*.war
+*.nar
+
+# Node/Frontend
+node_modules/
+dist/
+build/
+.vite/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.iml
+*.swp
+*~
+
+# Database
+*.sqlite
+*.h2.db
+data/
+
+# OS
+.DS_Store
+Thumbs.db
+=======
+# Backend
+backend/target/
+backend/uploads/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# IDE and OS files
+.vscode/
+.idea/
+*.log
+.DS_Store
+Thumbs.db
+
+# Ignore dependencies
+node_modules/
+frontend/node_modules/
+
+# Ignore build outputs
+target/
+dist/
+bin/
+*.class
+
+# Ignore environment variables and logs
+.env
+*.log
+
