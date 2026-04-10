@@ -58,18 +58,19 @@ export default function NewBookingPage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="card p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="card p-8 space-y-6 shadow-lg border border-surface-200 dark:border-surface-700">
         {/* Resource ID input */}
         <div>
-          <label className="label">Resource ID *</label>
+          <label className="label font-semibold text-surface-900 dark:text-white">Resource ID *</label>
           <input
             type="text"
             value={form.resourceId}
             onChange={e => setForm(f => ({ ...f, resourceId: e.target.value }))}
-            className="input"
-            placeholder="Enter resource ID"
+            className="input mt-1 border-surface-300 dark:border-surface-600"
+            placeholder="Enter resource ID (e.g., ROOM-101, LAB-02)"
             required
           />
+          <p className="text-xs text-surface-400 mt-2">The unique identifier for the resource you want to book</p>
         </div>
 
         {/* Date */}
