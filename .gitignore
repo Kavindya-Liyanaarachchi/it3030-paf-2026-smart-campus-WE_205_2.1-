@@ -1,4 +1,4 @@
-.env
 backend/target/
 /node_modules
 /dist
+config.bat

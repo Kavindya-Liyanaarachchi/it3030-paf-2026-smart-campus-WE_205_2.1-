@@ -2,15 +2,21 @@ package com.smartcampus.dto.response;
 
 import com.smartcampus.enums.BookingStatus;
 import lombok.Data;
+import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookingResponse {
     private String id;
     private UserResponse user;
-    private ResourceResponse resource;
+    private String resourceId;
     private LocalDate bookingDate;
     private LocalTime startTime;
     private LocalTime endTime;
