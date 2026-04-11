@@ -25,7 +25,7 @@ export default function BookingsPage() {
 
   const [statusFilter, setStatusFilter] = useState<BookingStatus | ''>('');
   const [page, setPage] = useState(0);
-  const [reviewingId, setReviewingId] = useState<number | null>(null);
+  const [reviewingId, setReviewingId] = useState<string | null>(null);
   const [reviewNote, setReviewNote] = useState('');
 
   const { data: myBookings = [], isLoading: myLoading } = useQuery({
@@ -50,7 +50,7 @@ export default function BookingsPage() {
   });
 
   const reviewMutation = useMutation({
-    mutationFn: ({ id, approved }: { id: number; approved: boolean }) =>
+    mutationFn: ({ id, approved }: { id: string; approved: boolean }) =>
       bookingsApi.review(id, { approved, adminNote: reviewNote }),
     onSuccess: () => {
       toast.success('Booking reviewed');
@@ -201,7 +201,7 @@ export default function BookingsPage() {
                       className="btn-ghost text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
                       disabled={cancelMutation.isPending}
                     >
-                      Cancel
+                      Cancel jj
                     </button>
                   )}
                 </div>

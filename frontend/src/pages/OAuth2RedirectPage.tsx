@@ -29,7 +29,7 @@ export default function OAuth2RedirectPage() {
     authApi.getMe()
       .then((user) => {
         login(token, refreshToken, user);
-        navigate('/dashboard', { replace: true });
+        navigate('/bookings', { replace: true });
       })
       .catch((err) => {
         console.error('Failed to fetch user after OAuth2:', err);

@@ -88,7 +88,7 @@ export default function LoginPage() {
   const [registerErrors, setRegisterErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (isAuthenticated) navigate('/dashboard', { replace: true });
+    if (isAuthenticated) navigate('/bookings', { replace: true });
   }, [isAuthenticated, navigate]);
 
   // ── Validation ──────────────────────────────────────────────
@@ -147,7 +147,7 @@ export default function LoginPage() {
       });
       login(data.accessToken, data.refreshToken, data.user);
       toast.success(`Welcome back, ${data.user.name}!`);
-      navigate('/dashboard', { replace: true });
+      navigate('/bookings', { replace: true });
     } catch (err: any) {
       const msg = err?.response?.data?.message ?? 'Login failed. Please try again.';
       toast.error(msg);
@@ -169,7 +169,7 @@ export default function LoginPage() {
       });
       login(data.accessToken, data.refreshToken, data.user);
       toast.success(`Welcome to Smart Campus, ${data.user.name}!`);
-      navigate('/dashboard', { replace: true });
+      navigate('/bookings', { replace: true });
     } catch (err: any) {
       const msg = err?.response?.data?.message ?? 'Registration failed. Please try again.';
       toast.error(msg);
