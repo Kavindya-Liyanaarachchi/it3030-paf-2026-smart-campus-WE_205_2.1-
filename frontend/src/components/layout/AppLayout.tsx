@@ -1,12 +1,14 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
+import { useTheme } from '../../contexts/ThemeContext';
 import { notificationsApi } from '../../api/notifications';
 import {
   LayoutDashboard, Building2, Calendar, Flag ,
   Bell, Settings, LogOut, ChevronRight, Menu, X, Moon, Sun,
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import logo from '../../assets/logo.svg';
+import { useState } from 'react';
 import clsx from 'clsx';
 
 const navItems = [
@@ -23,8 +25,8 @@ const adminItems = [
 
 export default function AppLayout() {
   const { user, logout, hasRole } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [dark, setDark] = useState(() => localStorage.getItem('theme') === 'dark');
   const navigate = useNavigate();
 
   const { data: countData } = useQuery({
@@ -35,11 +37,6 @@ export default function AppLayout() {
 
   const unreadCount = countData?.count ?? 0;
 
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', dark);
-    localStorage.setItem('theme', dark ? 'dark' : 'light');
-  }, [dark]);
-
   const Sidebar = ({ mobile = false }: { mobile?: boolean }) => (
     <div className={clsx(
       'flex flex-col h-full',
@@ -48,10 +45,10 @@ export default function AppLayout() {
       {/* Logo */}
       <a href="/dashboard" className="flex items-center gap-3 mb-8 px-1">
         <div className="w-9 h-9 bg-brand-500 rounded-xl flex items-center justify-center shadow-glow flex-shrink-0">
-          <Building2 className="w-5 h-5 text-white" />
+          <img src={logo} alt="Smart Campus logo" className="w-5 h-5" />
         </div>
         <div>
-          <div className="font-display font-700 text-sm text-surface-900 dark:text-white leading-tight">
+          <div className="font-display font-800 text-sm text-surface-900 dark:text-white leading-tight">
             Smart Campus
           </div>
           <div className="text-[10px] text-surface-400 uppercase tracking-wider">
@@ -101,11 +98,11 @@ export default function AppLayout() {
       {/* User section */}
       <div className="border-t border-surface-100 dark:border-surface-800 pt-4 space-y-1">
         <button
-          onClick={() => setDark(d => !d)}
+          onClick={toggleTheme}
           className="sidebar-link w-full"
         >
-          {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          <span>{dark ? 'Light Mode' : 'Dark Mode'}</span>
+          {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
         </button>
         <button
           onClick={() => { navigate('/profile'); mobile && setSidebarOpen(false); }}
@@ -144,7 +141,7 @@ export default function AppLayout() {
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
           <aside className="relative z-50 flex flex-col w-72 bg-white dark:bg-surface-900 shadow-xl">
             <div className="flex items-center justify-between p-4 border-b border-surface-100 dark:border-surface-800">
-              <span className="font-display font-700 text-sm">Smart Campus</span>
+              <span className="font-display font-800 text-sm">Smart Campus</span>
               <button onClick={() => setSidebarOpen(false)} className="btn-ghost p-1.5">
                 <X className="w-4 h-4" />
               </button>
@@ -161,7 +158,7 @@ export default function AppLayout() {
           <button onClick={() => setSidebarOpen(true)} className="btn-ghost p-1.5">
             <Menu className="w-5 h-5" />
           </button>
-          <span className="font-display font-700 text-sm flex-1">Smart Campus</span>
+          <span className="font-display font-800 text-sm flex-1">Smart Campus</span>
           <button onClick={() => navigate('/notifications')} className="btn-ghost p-1.5 relative">
             <Bell className="w-5 h-5" />
             {unreadCount > 0 && (
@@ -182,3 +179,5 @@ export default function AppLayout() {
     </div>
   );
 }
+
+

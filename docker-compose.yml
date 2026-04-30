@@ -9,15 +9,26 @@ services:
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - JWT_SECRET=${JWT_SECRET:-SmartCampus2026SecretKeyForJWTTokenGenerationMustBeAtLeast256BitsLong}
       - FRONTEND_URL=http://localhost:5173
+      - MONGODB_URI=mongodb://mongodb:27017/smartcampus
     volumes:
       - uploads:/app/uploads
+    depends_on:
+      - mongodb
 
   frontend:
     build: ./frontend
     ports:
-      - "5173:5173"
+      - "5173:80"
     depends_on:
       - backend
 
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
 volumes:
   uploads:
+  mongodb_data:

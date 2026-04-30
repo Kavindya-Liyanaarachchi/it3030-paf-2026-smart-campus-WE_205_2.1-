@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { notificationsApi, notificationPreferencesApi, NotificationPreference } from '../api/notifications';
+import { notificationsApi, notificationPreferencesApi } from '../api/notifications';
 import { useNavigate } from 'react-router-dom';
 import {
   Bell, CheckCheck, Calendar, Flag, MessageSquare,
   Settings, ChevronDown, ChevronUp, Save,
 } from 'lucide-react';
 import { timeAgo } from '../utils';
-import { NotificationType } from '../types';
+import { NotificationType, NotificationPreference } from '../types';
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
 
@@ -37,8 +37,8 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
       )}
     >
       <span className={clsx(
-        'absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200',
-        checked ? 'translate-x-5' : 'translate-x-0.5'
+        'absolute top-[2px] left-[2px] w-4 h-4 rounded-full bg-white shadow transition-all duration-200',
+        checked ? 'translate-x-5' : 'translate-x-0'
       )} />
     </button>
   );

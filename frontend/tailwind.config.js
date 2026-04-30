@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+﻿/** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
@@ -6,35 +6,39 @@ export default {
     extend: {
       colors: {
         brand: {
-          50:  '#f0f4ff',
-          100: '#dde7ff',
-          200: '#b3caff',
-          300: '#809dff',
-          400: '#4d6ef5',
-          500: '#2a4fd4',
-          600: '#1a38b3',
-          700: '#122790',
-          800: '#0d1e70',
-          900: '#08134d',
-          950: '#050d33',
+          50:  '#f1fbec',
+          100: '#e0f7d3',
+          200: '#c3f0a7',
+          300: '#a2e678',
+          400: '#8bd856',
+          500: '#7BC74D',
+          600: '#63a63e',
+          700: '#4c842f',
+          800: '#386421',
+          900: '#274417',
+          950: '#17280d',
         },
         surface: {
-          50:  '#f8f9fb',
-          100: '#f0f2f7',
-          200: '#e3e7f0',
-          300: '#ced4e3',
-          400: '#9aa3be',
-          500: '#6b7699',
-          600: '#4e5878',
-          700: '#363d5a',
-          800: '#1e2235',
-          900: '#141728',
-          950: '#0d0f1e',
+          50:  '#f7f7f7',
+          100: '#eeeeee',
+          200: '#d9d9db',
+          300: '#b9bbbf',
+          400: '#8b8f97',
+          500: '#393E46',
+          600: '#2f333a',
+          700: '#25282e',
+          800: '#1d1f24',
+          900: '#15171b',
+          950: '#222831',
+        },
+        accent: {
+          500: '#EEEEEE',
         },
       },
       fontFamily: {
-        sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
-        display: ['"Syne"', 'sans-serif'],
+        sans: ['"Urbanist"', 'Georgia', 'serif'],
+        display: ['"Urbanist"', 'Georgia', 'serif'],
+        formal: ['"Urbanist"', 'Georgia', 'serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       borderRadius: {
@@ -50,3 +54,5 @@ export default {
   },
   plugins: [],
 }
+
+

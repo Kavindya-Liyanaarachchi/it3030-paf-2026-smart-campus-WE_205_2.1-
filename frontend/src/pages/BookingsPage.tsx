@@ -25,7 +25,7 @@ export default function BookingsPage() {
 
   const [statusFilter, setStatusFilter] = useState<BookingStatus | ''>('');
   const [page, setPage] = useState(0);
-  const [reviewingId, setReviewingId] = useState<number | null>(null);
+  const [reviewingId, setReviewingId] = useState<string | null>(null);
   const [reviewNote, setReviewNote] = useState('');
 
   const { data: myBookings = [], isLoading: myLoading } = useQuery({
@@ -41,7 +41,7 @@ export default function BookingsPage() {
   });
 
   const cancelMutation = useMutation({
-    mutationFn: bookingsApi.cancel,
+    mutationFn: (id: string) => bookingsApi.cancel(id),
     onSuccess: () => {
       toast.success('Booking cancelled');
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
@@ -50,7 +50,7 @@ export default function BookingsPage() {
   });
 
   const reviewMutation = useMutation({
-    mutationFn: ({ id, approved }: { id: number; approved: boolean }) =>
+    mutationFn: ({ id, approved }: { id: string; approved: boolean }) =>
       bookingsApi.review(id, { approved, adminNote: reviewNote }),
     onSuccess: () => {
       toast.success('Booking reviewed');
