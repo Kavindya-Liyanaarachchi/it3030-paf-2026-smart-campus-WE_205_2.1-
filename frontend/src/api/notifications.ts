@@ -24,18 +24,6 @@ export const notificationsApi = {
     api.put<NotificationPreference>('/notifications/preferences', data).then(r => r.data),
 };
 
-export interface NotificationPreference {
-  id: string;
-  bookingApproved: boolean;
-  bookingRejected: boolean;
-  bookingCancelled: boolean;
-  ticketStatusChanged: boolean;
-  ticketAssigned: boolean;
-  ticketCommentAdded: boolean;
-  ticketResolved: boolean;
-  systemNotifications: boolean;
-}
-
 export const notificationPreferencesApi = {
   get: () => api.get<NotificationPreference>('/notifications/preferences').then(r => r.data),
   update: (data: NotificationPreference) =>

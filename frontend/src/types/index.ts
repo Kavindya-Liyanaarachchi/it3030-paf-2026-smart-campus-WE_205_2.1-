@@ -124,6 +124,18 @@ export interface AuthResponse {
   user: User;
 }
 
+export interface NotificationPreference {
+  id: string;
+  bookingApproved: boolean;
+  bookingRejected: boolean;
+  bookingCancelled: boolean;
+  ticketStatusChanged: boolean;
+  ticketAssigned: boolean;
+  ticketCommentAdded: boolean;
+  ticketResolved: boolean;
+  systemNotifications: boolean;
+}
+
 // Form types — all IDs are strings
 export interface BookingFormData {
   resourceId: string;
